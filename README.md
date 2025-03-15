@@ -7,7 +7,7 @@ A backend service to demonstrate API response time optimization, with and withou
 ### 1. Clone the Repository
 ```sh
 git clone -b develop https://github.com/gdkimaiyo/optimise-be.git
-cd optimize
+cd optimise-be
 ```
 
 ### 2. Set Up a Virtual Environment
