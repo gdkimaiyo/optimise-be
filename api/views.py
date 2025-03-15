@@ -1,12 +1,45 @@
-from django.shortcuts import render
+import requests
+import time
 
 # rest_framework
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.core.cache import cache
+from .serializers import PostSerializer
 
 
 # Create your views here.
 @api_view(["GET"])
 def home(request):
     return Response({"message": "Welcome to Optimization Demo"})
+
+
+@api_view(['GET'])
+def unoptimized_posts(request):
+    start_time = time.time()
+    response = requests.get('https://jsonplaceholder.typicode.com/posts')
+    posts = response.json()
+    serializer = PostSerializer(posts, many=True)
+    total_time = time.time() - start_time
+    print(f"Unoptimized: Response time: {total_time:.2f} seconds")
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def optimized_posts(request):
+    start_time = time.time()
+    cached_posts = cache.get('jsonplaceholder_posts')
+    if cached_posts is None:
+        response = requests.get('https://jsonplaceholder.typicode.com/posts')
+        posts = response.json()
+        cache.set('jsonplaceholder_posts', posts, 3600)  # Cache for 1 hour
+        print("we are here first...")
+    else:
+        posts = cached_posts
+        print("we are here now...")
+
+    serializer = PostSerializer(posts, many=True)
+    total_time = time.time() - start_time
+    print(f"Optimized: Response time: {total_time:.2f} seconds")
+    return Response(serializer.data)
