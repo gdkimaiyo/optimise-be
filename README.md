@@ -10,7 +10,13 @@ git clone -b develop https://github.com/gdkimaiyo/optimise-be.git
 cd optimise-be
 ```
 
-### 2. Set Up a Virtual Environment
+### 2. Create a .env File
+```sh
+touch .env
+```
+Add respective environment variables as shared.
+
+### 3. Set Up a Virtual Environment
 #### For macOS/Linux:
 ```sh
 python -m venv virtual
