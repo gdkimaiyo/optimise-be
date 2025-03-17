@@ -21,8 +21,12 @@ def unoptimized_posts(request):
     response = requests.get('https://jsonplaceholder.typicode.com/posts')
     posts = response.json()
     serializer = PostSerializer(posts, many=True)
-    total_time = time.time() - start_time
-    print(f"Unoptimized: Response time: {total_time:.2f} seconds")
+    end_time = time.time()
+    total_time_secs = end_time - start_time
+    total_time_milli_secs = total_time_secs * 1000
+    
+    print(f"Unoptimized: Response time: {total_time_secs:.2f} seconds")
+    print(f"Unoptimized: Response time: {total_time_milli_secs:.2f} milliseconds")
     return Response(serializer.data)
 
 
@@ -34,12 +38,14 @@ def optimized_posts(request):
         response = requests.get('https://jsonplaceholder.typicode.com/posts')
         posts = response.json()
         cache.set('jsonplaceholder_posts', posts, 3600)  # Cache for 1 hour
-        print("we are here first...")
     else:
         posts = cached_posts
-        print("we are here now...")
 
     serializer = PostSerializer(posts, many=True)
-    total_time = time.time() - start_time
-    print(f"Optimized: Response time: {total_time:.2f} seconds")
+    end_time = time.time()
+    total_time_secs = end_time - start_time
+    total_time_milli_secs = total_time_secs * 1000
+    
+    print(f"Optimized: Response time: {total_time_secs:.2f} seconds")
+    print(f"Optimized: Response time: {total_time_milli_secs:.2f} milliseconds")
     return Response(serializer.data)
