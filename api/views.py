@@ -6,7 +6,9 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.core.cache import cache
-from .serializers import PostSerializer
+
+from api.models import User
+from .serializers import PostSerializer, UserSerializer
 
 
 # Create your views here.
@@ -48,4 +50,22 @@ def optimized_posts(request):
     
     print(f"Optimized: Response time: {total_time_secs:.2f} seconds")
     print(f"Optimized: Response time: {total_time_milli_secs:.2f} milliseconds")
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def users_data(request):
+    cached_users = cache.get('dummy_users')
+    if cached_users is None:
+        users = [
+            User(1, "admin", "password123", "admin@example.com", "1234-5678-9012-3456"),
+            User(2, "user1", "securepass", "user1@example.com", "9876-5432-1098-7654"),
+            User(3, "testuser", "testpass", "test@test.com", "1111-2222-3333-4444"),
+        ]
+
+        serializer = UserSerializer(users, many=True)
+        cached_users = serializer.data
+        cache.set('dummy_users', cached_users, 3600)  # Cache for 1 hour
+    else:
+        serializer = UserSerializer(cached_users, many=True)
+
     return Response(serializer.data)
