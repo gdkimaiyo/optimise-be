@@ -15,11 +15,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import include, path
-from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework.permissions import AllowAny
+from drf_yasg.views import get_schema_view as swagger_schema_view
+from drf_yasg import openapi
+
+from django.conf import settings
+
+schema_view = swagger_schema_view(
+    openapi.Info(
+        title="API Documentation Example",
+        default_version="v1",
+    ),
+    public=True,
+    permission_classes=(AllowAny,),  # Anyone can view the APIs
+)
+
 
 urlpatterns = [
     path('', include('myproject.public_urls')),
+    path('api-docs-swagger/', schema_view.with_ui('swagger',
+         cache_timeout=0), name='schema-swagger-ui'),
+    path('api-docs-redoc/', schema_view.with_ui('redoc',
+         cache_timeout=0), name='schema-redoc'),
 ]
 
 if settings.DEBUG:

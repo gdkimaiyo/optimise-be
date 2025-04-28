@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'api',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -83,7 +84,7 @@ if config('MODE') == 'prod' or config('MODE') == 'staging':
     CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS').split(",")
     ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(",")
 
-SERP_API_KEY="1fnlblps3380nboovc6fja123"
+SERP_API_KEY = "1fnlblps3380nboovc6fja123"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
